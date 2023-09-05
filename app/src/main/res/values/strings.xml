@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">AndroidApp</string>
-    <string name="my_name">Mizuki</string>
+    <string name="text_view">TextView</string>
+    <string name="change_button">Change</string>
+    <string name="save_button">Save</string>
+    <string name="reset_button">Reset</string>
 </resources>

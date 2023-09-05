@@ -5,39 +5,47 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 
 import jp.ac.meijou.android.s221205036.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private PrefDataStore prefDataStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        prefDataStore = PrefDataStore.getInstance(this);
 
-        binding.button.setOnClickListener(view -> {
+        prefDataStore.getString("name")
+                .ifPresent(name -> binding.textView.setText(name));
+
+        binding.saveButton.setOnClickListener(view -> {
+            var text = binding.editTextText.getText().toString();
+            prefDataStore.setString("name",text);
+        });
+
+        binding.changeButton.setOnClickListener(view -> {
             var text = binding.editTextText.getText().toString();
             binding.textView.setText(text);
         });
 
-        binding.editTextText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                binding.textView.setText(s.toString());
-            }
+        binding.resetButton.setOnClickListener(view -> {
+            prefDataStore.setString("name", null);
         });
+
+        Log.d("Mizuki", "onCreate text: " + binding.textView.getText());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        prefDataStore.getString("name")
+                .ifPresent(name -> binding.textView.setText(name));
+        Log.d("Mizuki", "onStart text: " + binding.textView.getText());
     }
 }
